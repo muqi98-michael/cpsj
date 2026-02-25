@@ -2,7 +2,7 @@ import {
   ArrowLeft, Edit2, Download, Share2, ChevronRight,
   CheckCircle, TrendingUp, Plus, MoreHorizontal,
   FileText, Users, Lightbulb, Link2, BarChart2,
-  Calendar, Tag,
+  Calendar, Tag, AlignLeft, AlertCircle,
 } from 'lucide-react';
 import { scenes, solutions, caseStudies } from '../data/mockData';
 import { useStore } from '../store/contentStore';
@@ -48,7 +48,14 @@ interface DocItem {
   uploadedAt: string;
 }
 
+interface PainPoint {
+  title: string;
+  desc: string;
+}
+
 const SCENE_EXTRA: Record<string, {
+  sceneDescription: string[];
+  painPoints: PainPoint[];
   roles: RoleItem[];
   values: ValueItem[];
   solutionRows: SolutionRow[];
@@ -56,6 +63,29 @@ const SCENE_EXTRA: Record<string, {
   docs: DocItem[];
 }> = {
   default: {
+    sceneDescription: [
+      '客户信用评估是金融机构在信贷业务中对借款人信用状况进行评估的关键环节。传统评估方式依赖人工审核，效率低下，风险识别滞后，难以满足大规模信贷业务需求。',
+      '通过本场景，金融机构可以建立标准化的信用评估模型，整合内外部数据，实现自动化、智能化的信用评估，提高审批效率、降低信用风险。',
+      '该场景适用于各类银行、消费金融公司、小贷公司等开展信贷业务的金融机构，可应用于个人贷款、企业贷款、信用卡审批等多种信贷场景。',
+    ],
+    painPoints: [
+      {
+        title: '数据来源分散，评估维度不全面',
+        desc: '客户数据分散在多个系统中，难以整合形成完整客户视图，导致评估维度有限，难以全面评估客户信用状况。',
+      },
+      {
+        title: '人工审核效率低，处理周期长',
+        desc: '传统人工审核方式耗时费力，平均审批周期长达3天，无法满足客户快速放贷需求，影响客户体验和业务增长。',
+      },
+      {
+        title: '风险模型更新滞后',
+        desc: '风险评估模型更新周期慢，难以快速响应市场变化和新型欺诈手段，导致风险识别能力不足。',
+      },
+      {
+        title: '缺乏标准化评估流程',
+        desc: '不同审核人员评估标准不一，主观性强，导致评估结果差异大，影响信贷决策的公正性和准确性。',
+      },
+    ],
     roles: [
       {
         name: '信贷经理',
@@ -216,6 +246,43 @@ export default function SceneDetailPage({ sceneId, onBack }: Props) {
                   {m.extra && <span className="text-xs font-medium bg-green-50 text-green-600 px-1.5 py-0.5 rounded">{m.extra}</span>}
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">{m.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 场景描述 ── */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <AlignLeft size={16} className="text-blue-500" />
+            场景描述
+          </h2>
+          <div className="space-y-3">
+            {extra.sceneDescription.map((para, i) => (
+              <p key={i} className="text-sm text-gray-600 leading-relaxed">{para}</p>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 场景痛点 ── */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-base font-semibold text-gray-800 mb-5 flex items-center gap-2">
+            <AlertCircle size={16} className="text-red-500" />
+            场景痛点
+          </h2>
+          <div className="space-y-4">
+            {extra.painPoints.map((point, i) => (
+              <div key={i} className="flex gap-4">
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0 mt-0.5"
+                  style={{ backgroundColor: '#EF4444' }}
+                >
+                  {i + 1}
+                </div>
+                <div className="flex-1 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                  <p className="text-sm font-semibold text-gray-800 mb-1">{point.title}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{point.desc}</p>
+                </div>
               </div>
             ))}
           </div>
