@@ -13,6 +13,7 @@ import OpenManagePage from './components/OpenManagePage';
 import SolutionDetailPage from './components/SolutionDetailPage';
 import NewContentModal from './components/NewContentModal';
 import SearchResultsPage from './components/SearchResultsPage';
+import CaseDetailPage from './components/CaseDetailPage';
 import { useContentStore, ContentStoreContext } from './store/contentStore';
 import type { Scene, Solution, CaseStudy } from './types';
 
@@ -51,6 +52,8 @@ export default function App() {
   const [sceneDetailId, setSceneDetailId] = useState<string | null>(null);
   const [solutionDetailId, setSolutionDetailId] = useState<string | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadInitialType, setUploadInitialType] = useState<'场景' | '解决方案' | '案例'>('场景');
+  const [caseDetailId, setCaseDetailId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocusKey, setSearchFocusKey] = useState(0);
 
@@ -58,6 +61,12 @@ export default function App() {
     setCurrentPage(id as PageId);
     setSceneDetailId(null);
     setSolutionDetailId(null);
+    setCaseDetailId(null);
+    setSearchQuery('');
+  }
+
+  function handleCaseClick(caseId: string) {
+    setCaseDetailId(caseId);
     setSearchQuery('');
   }
 
@@ -73,12 +82,14 @@ export default function App() {
 
   function handleSceneClick(sceneId: string) {
     setSolutionDetailId(null);
+    setCaseDetailId(null);
     setSceneDetailId(sceneId);
     setSearchQuery('');
   }
 
   function handleSolutionClick(solutionId: string) {
     setSceneDetailId(null);
+    setCaseDetailId(null);
     setSolutionDetailId(solutionId);
     setSearchQuery('');
   }
@@ -86,6 +97,7 @@ export default function App() {
   function handleBackFromDetail() {
     setSceneDetailId(null);
     setSolutionDetailId(null);
+    setCaseDetailId(null);
   }
 
   const renderContent = () => {
@@ -98,6 +110,16 @@ export default function App() {
           onSceneClick={handleSceneClick}
           onSolutionClick={handleSolutionClick}
           onQueryChange={setSearchQuery}
+        />
+      );
+    }
+    if (caseDetailId) {
+      return (
+        <CaseDetailPage
+          caseId={caseDetailId}
+          onBack={handleBackFromDetail}
+          onSceneClick={handleSceneClick}
+          onSolutionClick={handleSolutionClick}
         />
       );
     }
@@ -114,10 +136,10 @@ export default function App() {
       );
     }
     switch (currentPage) {
-      case 'home':      return <HomePage onSceneClick={handleSceneClick} onUploadClick={() => setShowUploadModal(true)} onAIClick={() => handleNavChange('ai')} onSearchClick={handleSearchFocus} />;
-      case 'scenes':    return <ScenePage onSceneClick={handleSceneClick} />;
-      case 'solutions': return <SolutionPage onSolutionClick={handleSolutionClick} />;
-      case 'cases':     return <CasePage />;
+      case 'home':      return <HomePage onSceneClick={handleSceneClick} onUploadClick={() => { setUploadInitialType('场景'); setShowUploadModal(true); }} onAIClick={() => handleNavChange('ai')} onSearchClick={handleSearchFocus} />;
+      case 'scenes':    return <ScenePage onSceneClick={handleSceneClick} onAddScene={() => { setUploadInitialType('场景'); setShowUploadModal(true); }} />;
+      case 'solutions': return <SolutionPage onSolutionClick={handleSolutionClick} onAddSolution={() => { setUploadInitialType('解决方案'); setShowUploadModal(true); }} />;
+      case 'cases':     return <CasePage onAddCase={() => { setUploadInitialType('案例'); setShowUploadModal(true); }} onCaseClick={handleCaseClick} />;
       case 'ai':        return <AIPage />;
       case 'admin':     return <AdminPage />;
       case 'open':      return <OpenManagePage />;
@@ -137,6 +159,7 @@ export default function App() {
           <NewContentModal
             onClose={() => setShowUploadModal(false)}
             onSave={handleUploadSave}
+            initialType={uploadInitialType}
           />
         )}
         <div className="min-h-screen flex flex-col bg-gray-50">

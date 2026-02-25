@@ -1,7 +1,12 @@
 import { Plus } from 'lucide-react';
 import { caseStudies } from '../data/mockData';
 
-export default function CasePage() {
+interface CasePageProps {
+  onAddCase?: () => void;
+  onCaseClick?: (caseId: string) => void;
+}
+
+export default function CasePage({ onAddCase, onCaseClick }: CasePageProps) {
   return (
     <main className="bg-gray-50 min-h-screen">
       <div className="max-w-[1440px] mx-auto px-6 py-8">
@@ -11,7 +16,8 @@ export default function CasePage() {
             <p className="text-gray-500 text-sm mt-1">真实企业数字化转型成功案例与经验沉淀</p>
           </div>
           <button
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white"
+            onClick={onAddCase}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#2563EB' }}
           >
             <Plus size={16} />
@@ -23,6 +29,7 @@ export default function CasePage() {
           {caseStudies.map((c) => (
             <div
               key={c.id}
+              onClick={() => onCaseClick?.(c.id)}
               className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
             >
               <div
