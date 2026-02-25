@@ -77,9 +77,10 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 
 interface ScenePageProps {
   onSceneClick?: (sceneId: string) => void;
+  onAddScene?: () => void;
 }
 
-export default function ScenePage({ onSceneClick }: ScenePageProps) {
+export default function ScenePage({ onSceneClick, onAddScene }: ScenePageProps) {
   const { scenes: storedScenes } = useStore();
   const [searchText, setSearchText] = useState('');
   const [industryFilter, setIndustryFilter] = useState('全部行业');
@@ -145,6 +146,7 @@ export default function ScenePage({ onSceneClick }: ScenePageProps) {
               导出
             </button>
             <button
+              onClick={onAddScene}
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors hover:opacity-90"
               style={{ backgroundColor: '#2563EB' }}
             >

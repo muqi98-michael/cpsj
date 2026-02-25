@@ -7,6 +7,7 @@ type ContentType = '场景' | '解决方案' | '案例';
 interface Props {
   onClose: () => void;
   onSave: (type: ContentType, data: Scene | Solution | CaseStudy) => void;
+  initialType?: ContentType;
 }
 
 /* ─── 常量 ─── */
@@ -682,8 +683,8 @@ const TYPE_DESC: Record<ContentType, string> = {
 };
 const TYPE_ICON: Record<ContentType, string> = { 场景: '🗺️', 解决方案: '📋', 案例: '🏆' };
 
-export default function NewContentModal({ onClose, onSave }: Props) {
-  const [activeType, setActiveType] = useState<ContentType>('场景');
+export default function NewContentModal({ onClose, onSave, initialType = '场景' }: Props) {
+  const [activeType, setActiveType] = useState<ContentType>(initialType);
 
   const handleSave = (data: Scene | Solution | CaseStudy) => {
     onSave(activeType, data);

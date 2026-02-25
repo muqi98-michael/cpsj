@@ -13,9 +13,10 @@ const fileTypeColors: Record<string, string> = {
 
 interface SolutionPageProps {
   onSolutionClick?: (solutionId: string) => void;
+  onAddSolution?: () => void;
 }
 
-export default function SolutionPage({ onSolutionClick }: SolutionPageProps) {
+export default function SolutionPage({ onSolutionClick, onAddSolution }: SolutionPageProps) {
   const { solutions: storedSolutions } = useStore();
   const [activeFilter, setActiveFilter] = useState<IndustryFilter>('全部行业');
   const [searchText, setSearchText] = useState('');
@@ -36,7 +37,8 @@ export default function SolutionPage({ onSolutionClick }: SolutionPageProps) {
             <h1 className="text-2xl font-semibold text-gray-800">解决方案库</h1>
             <p className="text-gray-500 text-sm mt-1">探索各行业经过实践验证的解决方案</p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white"
+          <button onClick={onAddSolution}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#2563EB' }}>
             <Plus size={16} />
             上传方案
